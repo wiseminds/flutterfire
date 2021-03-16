@@ -12,7 +12,7 @@ environment:
 
 dependencies:
   firebase_analytics_platform_interface: ^1.1.0
-    path: ../firebase_analytics_platform_interface/ 
+    # path: ../firebase_analytics_platform_interface/ 
   firebase_analytics_web: #^0.2.0+1
     git:
       url: https://github.com/wiseminds/flutterfire.git
