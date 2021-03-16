@@ -4,6 +4,7 @@ description:
   re-releasing.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config
 version: 0.9.0-dev.0
+publish_to: 'none' 
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
@@ -12,7 +13,11 @@ environment:
 dependencies:
   firebase_core: ^1.0.1
   firebase_core_platform_interface: ^4.0.0
-  firebase_remote_config_platform_interface: ^0.2.0-dev.0
+  firebase_remote_config_platform_interface: #^0.2.0-dev.0
+    git:
+      url: https://github.com/wiseminds/flutterfire.git
+      path: packages/firebase_remote_config/firebase_remote_config_platform_interface  
+      ref: 487b193b8b68a3e35da4746417808e13bdd17799  
   flutter:
     sdk: flutter
 
@@ -20,7 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0
-  pedantic: ^1.8.0
+  pedantic: ^1.11.0
   plugin_platform_interface: ^2.0.0
   test: any
 
