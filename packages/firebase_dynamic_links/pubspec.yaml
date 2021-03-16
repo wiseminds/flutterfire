@@ -12,8 +12,8 @@ environment:
   flutter: ">=1.10.0"
 
 dependencies:
-  firebase_core: #^1.0.1
-    path: ../firebase_core/firebase_core
+  firebase_core: ^1.0.1
+    # path: ../../firebase_core/firebase_core
   flutter:
     sdk: flutter
 
