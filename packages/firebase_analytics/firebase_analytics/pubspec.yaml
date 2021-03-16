@@ -21,7 +21,7 @@ dependencies:
     git:
       url: https://github.com/wiseminds/flutterfire.git
       path: packages/firebase_analytics/firebase_analytics_web 
-      ref: b2b39fc98fdf3ad2604d04aaf92bc06724cb6562   
+      ref: 4877701a55f33c6e6a96e3207bd740ea6f008239   
     # path: ../firebase_analytics_web/ 
   firebase_core: ^1.0.1
     # path: ../../firebase_core/firebase_core/
