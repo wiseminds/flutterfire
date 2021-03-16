@@ -16,7 +16,7 @@ dependencies:
     git:
       url: https://github.com/wiseminds/flutterfire.git
       path: packages/firebase_analytics/firebase_analytics_platform_interface 
-      ref: b2b39fc98fdf3ad2604d04aaf92bc06724cb6562   
+      ref: 24b485240dfeb72f48c1bfaa8d4d43d3c84e6699   
     # path: ../firebase_analytics_platform_interface/ 
   flutter:
     sdk: flutter

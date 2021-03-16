@@ -11,7 +11,11 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_analytics_platform_interface: ^1.1.0
+  firebase_analytics_platform_interface: #^1.1.0
+    git:
+      url: https://github.com/wiseminds/flutterfire.git
+      path: packages/firebase_analytics/firebase_analytics_platform_interface 
+      ref: 24b485240dfeb72f48c1bfaa8d4d43d3c84e6699    
     # path: ../firebase_analytics_platform_interface/ 
   firebase_analytics_web: #^0.2.0+1
     git:
