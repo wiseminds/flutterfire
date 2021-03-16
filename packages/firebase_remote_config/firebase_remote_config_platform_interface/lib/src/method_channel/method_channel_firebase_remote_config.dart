@@ -1,10 +1,9 @@
-// @dart=2.9
+
 
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 
 import '../../firebase_remote_config_platform_interface.dart';
 import 'utils/exception.dart';
@@ -12,7 +11,7 @@ import 'utils/exception.dart';
 /// Method Channel delegate for [FirebaseRemoteConfigPlatform].
 class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   /// Creates a new instance for a given [FirebaseApp].
-  MethodChannelFirebaseRemoteConfig({@required FirebaseApp app})
+  MethodChannelFirebaseRemoteConfig({required FirebaseApp app})
       : super(appInstance: app);
 
   /// Internal stub class initializer.
@@ -41,29 +40,29 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     return MethodChannelFirebaseRemoteConfig._();
   }
 
-  Map<String, RemoteConfigValue> _activeParameters;
-  RemoteConfigSettings _settings;
-  DateTime _lastFetchTime;
-  RemoteConfigFetchStatus _lastFetchStatus;
+  Map<String, RemoteConfigValue>? _activeParameters;
+  RemoteConfigSettings? _settings;
+  DateTime? _lastFetchTime;
+  RemoteConfigFetchStatus? _lastFetchStatus;
 
   /// Gets a [FirebaseRemoteConfigPlatform] instance for a specific
   /// [FirebaseApp].
   ///
   /// Instances are cached and reused for incoming event handlers.
   @override
-  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
+  FirebaseRemoteConfigPlatform delegateFor({ required FirebaseApp app}) {
     if (_methodChannelFirebaseRemoteConfigInstances.containsKey(app.name)) {
-      return _methodChannelFirebaseRemoteConfigInstances[app.name];
+      return _methodChannelFirebaseRemoteConfigInstances[app.name]!;
     }
 
     _methodChannelFirebaseRemoteConfigInstances[app.name] =
         MethodChannelFirebaseRemoteConfig(app: app);
-    return _methodChannelFirebaseRemoteConfigInstances[app.name];
+    return _methodChannelFirebaseRemoteConfigInstances[app.name]!;
   }
 
   @override
   FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<dynamic, dynamic> remoteConfigValues}) {
+      {Map<dynamic, dynamic> remoteConfigValues = const <dynamic, dynamic>{}}) {
     final fetchTimeout = Duration(seconds: remoteConfigValues['fetchTimeout']);
     final minimumFetchInterval =
         Duration(seconds: remoteConfigValues['minimumFetchInterval']);
@@ -96,13 +95,14 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   @override
-  DateTime get lastFetchTime => _lastFetchTime;
+  DateTime get lastFetchTime => _lastFetchTime ?? DateTime(1970);
 
   @override
-  RemoteConfigFetchStatus get lastFetchStatus => _lastFetchStatus;
+  RemoteConfigFetchStatus get lastFetchStatus => _lastFetchStatus ?? RemoteConfigFetchStatus.noFetchYet;
 
   @override
-  RemoteConfigSettings get settings => _settings;
+  RemoteConfigSettings get settings => _settings ?? RemoteConfigSettings(
+    fetchTimeout:const Duration(seconds: 20), minimumFetchInterval: const Duration(minutes: 10) );
 
   @override
   Future<void> ensureInitialized() async {
@@ -122,7 +122,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       bool configChanged = await channel
           .invokeMethod<bool>('RemoteConfig#activate', <String, dynamic>{
         'appName': app.name,
-      });
+      }) ?? false;
       await _updateConfigParameters();
       return configChanged;
     } catch (exception, stackTrace) {
@@ -150,7 +150,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       bool configChanged = await channel.invokeMethod<bool>(
           'RemoteConfig#fetchAndActivate', <String, dynamic>{
         'appName': app.name,
-      });
+      }) ?? false;
       await _updateConfigParameters();
       await _updateConfigProperties();
       return configChanged;
@@ -163,47 +163,47 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
 
   @override
   Map<String, RemoteConfigValue> getAll() {
-    return _activeParameters;
+    return _activeParameters ?? {};
   }
 
   @override
   bool getBool(String key) {
-    if (!_activeParameters.containsKey(key)) {
+    if (_activeParameters?.containsKey(key) ?? true) {
       return RemoteConfigValue.defaultValueForBool;
     }
-    return _activeParameters[key].asBool();
+    return _activeParameters![key]!.asBool();
   }
 
   @override
   int getInt(String key) {
-    if (!_activeParameters.containsKey(key)) {
+    if (_activeParameters?.containsKey(key) ?? true) {
       return RemoteConfigValue.defaultValueForInt;
     }
-    return _activeParameters[key].asInt();
+    return _activeParameters![key]!.asInt();
   }
 
   @override
   double getDouble(String key) {
-    if (!_activeParameters.containsKey(key)) {
+    if (_activeParameters?.containsKey(key) ?? true) {
       return RemoteConfigValue.defaultValueForDouble;
     }
-    return _activeParameters[key].asDouble();
+    return _activeParameters![key]!.asDouble();
   }
 
   @override
   String getString(String key) {
-    if (!_activeParameters.containsKey(key)) {
+    if (_activeParameters?.containsKey(key) ?? true) {
       return RemoteConfigValue.defaultValueForString;
     }
-    return _activeParameters[key].asString();
+    return _activeParameters![key]!.asString();
   }
 
   @override
   RemoteConfigValue getValue(String key) {
-    if (!_activeParameters.containsKey(key)) {
+    if (_activeParameters?.containsKey(key) ?? true) {
       return RemoteConfigValue(null, ValueSource.valueStatic);
     }
-    return _activeParameters[key];
+    return _activeParameters![key]!;
   }
 
   @override
@@ -237,12 +237,12 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   Future<void> _updateConfigParameters() async {
-    Map<dynamic, dynamic> parameters = await channel
+    Map<dynamic, dynamic>? parameters = await channel
         .invokeMapMethod<dynamic, dynamic>(
             'RemoteConfig#getAll', <String, dynamic>{
       'appName': app.name,
     });
-    _activeParameters = _parseParameters(parameters);
+    _activeParameters = _parseParameters(parameters ?? {});
   }
 
   Future<void> _updateConfigProperties() async {
@@ -250,12 +250,12 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         .invokeMapMethod<dynamic, dynamic>(
             'RemoteConfig#getProperties', <String, dynamic>{
       'appName': app.name,
-    });
-    final fetchTimeout = Duration(seconds: properties['fetchTimeout']);
-    final minimumFetchInterval =
+    }) ?? {};
+    var fetchTimeout = Duration(seconds: properties['fetchTimeout']);
+    var minimumFetchInterval =
         Duration(seconds: properties['minimumFetchInterval']);
-    final lastFetchMillis = properties['lastFetchTime'];
-    final lastFetchStatus = properties['lastFetchStatus'];
+    var lastFetchMillis = properties['lastFetchTime'];
+    var lastFetchStatus = properties['lastFetchStatus'];
 
     _settings = RemoteConfigSettings(
       fetchTimeout: fetchTimeout,
