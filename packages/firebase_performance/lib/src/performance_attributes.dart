@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+ 
 
 part of firebase_performance;
 
@@ -21,7 +21,7 @@ abstract class PerformanceAttributes {
 
   bool get _hasStopped;
 
-  int get _handle;
+  int? get _handle;
 
   /// Sets a String [value] for the specified attribute with [name].
   ///
@@ -75,10 +75,10 @@ abstract class PerformanceAttributes {
   /// Returns the value of an attribute.
   ///
   /// Returns `null` if an attribute with this [name] has not been added.
-  String getAttribute(String name) => _attributes[name];
+  String? getAttribute(String name) => _attributes[name];
 
   /// All attributes added.
-  Future<Map<String, String>> getAttributes() {
+  Future<Map<String, String>?> getAttributes() {
     if (_hasStopped) {
       return Future<Map<String, String>>.value(
         Map<String, String>.unmodifiable(_attributes),

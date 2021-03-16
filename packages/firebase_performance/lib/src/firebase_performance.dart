@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_performance;
 
 /// Valid HttpMethods for manual network APIs.
@@ -38,11 +36,11 @@ class FirebasePerformance {
   /// True if performance monitoring is enabled and false if performance
   /// monitoring is disabled. This is for dynamic enable/disable state. This
   /// does not reflect whether instrumentation is enabled/disabled.
-  Future<bool> isPerformanceCollectionEnabled() {
-    return channel.invokeMethod<bool>(
+  Future<bool> isPerformanceCollectionEnabled() async {
+    return await channel.invokeMethod<bool>(
       'FirebasePerformance#isPerformanceCollectionEnabled',
       <String, dynamic>{'handle': _handle},
-    );
+    ) ?? false;
   }
 
   /// Enables or disables performance monitoring.
