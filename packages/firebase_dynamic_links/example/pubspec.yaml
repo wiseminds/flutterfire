@@ -12,15 +12,15 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
-  url_launcher: ^5.1.6
+  url_launcher: ^6.0.2
 
-dependency_overrides:
-  firebase_core:
-    path: ../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../firebase_core/firebase_core_web
+# dependency_overrides:
+#   firebase_core:
+#     path: ../../firebase_core/firebase_core
+#   firebase_core_platform_interface:
+#     path: ../../firebase_core/firebase_core_platform_interface
+#   firebase_core_web:
+#     path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
   e2e: ^0.6.1
