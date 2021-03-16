@@ -8,7 +8,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart' show  visibleForTesting;
 
-git 
+
 import 'method_channel_firebase_analytics.dart';
 
 /// The interface that implementations of `firebase_analytics` must extend.
