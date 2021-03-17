@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
 part of firebase_remote_config;
 
 /// The entry point for accessing Remote Config.
@@ -11,8 +10,8 @@ part of firebase_remote_config;
 /// [RemoteConfig.instance] is async.
 // ignore: prefer_mixin
 class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
-  RemoteConfig._({this.app})
-      : super(app?.name ?? '', 'plugins.flutter.io/firebase_remote_config');
+  RemoteConfig._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   // Cached instances of [FirebaseRemoteConfig].
   static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
@@ -36,7 +35,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// The [FirebaseApp] this instance was initialized with.
-  final FirebaseApp? app;
+  final FirebaseApp app;
 
   /// Returns an instance using the default [FirebaseApp].
   static RemoteConfig get instance {
@@ -106,7 +105,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// Returns a Map of all Remote Config parameters.
-  Map<String, RemoteConfigValue> getAll() {
+  Map<String, RemoteConfigValue>? getAll() {
     return _delegate.getAll();
   }
 
@@ -117,25 +116,25 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// Gets the value for a given key as an int.
-  int getInt(String key) {
+  int? getInt(String key) {
     // assert(key != null) ;
     return _delegate.getInt(key);
   }
 
   /// Gets the value for a given key as a double.
-  double getDouble(String key) {
+  double? getDouble(String key) {
     // assert(key != null);
     return _delegate.getDouble(key);
   }
 
   /// Gets the value for a given key as a String.
-  String getString(String key) {
+  String? getString(String key) {
     // assert(key != null);
     return _delegate.getString(key);
   }
 
   /// Gets the [RemoteConfigValue] for a given key.
-  RemoteConfigValue getValue(String key) {
+  RemoteConfigValue? getValue(String key) {
     // assert(key != null);
     return _delegate.getValue(key);
   }
@@ -152,12 +151,15 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     if (remoteConfigSettings?.fetchTimeout.inSeconds == 0) {
       remoteConfigSettings?.fetchTimeout = const Duration(seconds: 60);
     }
-    return _delegate.setConfigSettings(remoteConfigSettings);
+    return _delegate.setConfigSettings(remoteConfigSettings ??
+        RemoteConfigSettings(
+            fetchTimeout: const Duration(seconds: 20),
+            minimumFetchInterval: const Duration(minutes: 10)));
   }
 
   /// Sets the default parameter values for the current instance.
   Future<void> setDefaults(Map<String, dynamic>? defaultParameters) {
     assert(defaultParameters != null);
-    return _delegate.setDefaults(defaultParameters);
+    return _delegate.setDefaults(defaultParameters ?? {});
   }
 }

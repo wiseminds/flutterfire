@@ -43,7 +43,7 @@ class WelcomeWidget extends AnimatedWidget {
             SizedBox(
               height: 20,
             ),
-            Text('(${remoteConfig.getValue('welcome').source})'),
+            Text('(${remoteConfig.getValue('welcome')?.source})'),
             Text('(${remoteConfig.lastFetchTime})'),
             Text('(${remoteConfig.lastFetchStatus})'),
           ],
